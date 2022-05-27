@@ -174,29 +174,6 @@ Estos endpoints vendrán marcados con: `Authorization: Bearer Token`
 
 ---
 
-#### Actualizar un cliente / perfil - ALL
-
-`Authorization: Bearer Token`
-
-|Método|URL|Descripción|
-|-|-|-|
-|`PUT`|`api/v0/client/{id}`|Actualizar un cliente según su ID|
-
-##### Ejemplo de un body enviado
-```
-{
-    "userName": "David",
-    "email": "david@test.com",
-    "password": "test",
-    // Estos atributos los podrá enviar un trabajador
-    "role": "ROLE_WORKER",
-    "active": false
-}
-```
-
----
-
-
 #### Borrar un cliente - ALL
 
 (Realmente nunca llega a borrarse de la BD, se coloca el usuario como inactivo)
@@ -217,4 +194,4 @@ Estos endpoints vendrán marcados con: `Authorization: Bearer Token`
   <a href="https://www.twitter.com/davidcueto_dev"><img src="https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter Badge"></a>
 </p>
 
-* Link del proyecto: https://github.com/cuetodev/VirtualTravel
+* Link del proyecto: https://github.com/cuetodev/AppPeluqueriaCanina-TFG
