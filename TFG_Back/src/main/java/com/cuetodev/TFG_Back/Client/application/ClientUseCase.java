@@ -45,7 +45,12 @@ public class ClientUseCase implements ClientPort {
         Client checkClientInBD = clientRepositoryPort.findClientByEmailAndByPassword(client.getEmail(), client.getPassword());
 
         if (checkClientInBD == null) finalClient = clientRepositoryPort.clientSave(client);
-        else throw new ErrorOutputDTO("Email already exist");
+        else if (!checkClientInBD.getActive()) {
+            checkClientInBD.setActive(true);
+            finalClient = clientRepositoryPort.clientSave(checkClientInBD);
+        } else {
+            throw new ErrorOutputDTO("Email already exists");
+        }
 
         return finalClient;
     }

@@ -32,8 +32,7 @@ public class ClientRepository implements ClientRepositoryPort {
 
     @Override
     public Client findClientById(Integer id) {
-        // Using optionals to check if I don't receive a client
-        return clientRepositoryJPA.findById(id).orElse(null);
+        return clientRepositoryJPA.findByActiveAndClientId(true, id);
     }
 
     @Override

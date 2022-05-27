@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 
 @Data
 @AllArgsConstructor
@@ -29,6 +30,6 @@ public class ClientInputDTO {
     private Boolean active = true;
 
     public Client convertEntityToDTO() {
-        return new Client(this.id, this.userName, this.email, this.password, this.role, this.active);
+        return new Client(this.id, this.userName, this.email, this.password, this.role, this.active, new HashSet<>());
     }
 }

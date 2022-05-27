@@ -13,4 +13,5 @@ public interface ClientRepositoryJPA extends JpaRepository<Client, Integer> {
     public List<Client> findByUserNameContainingIgnoreCase(String userName);
     public Client findByEmailAndPasswordAndActive(String email, String password, Boolean active);
     public List<Client> findByActive(Boolean active);
+    public Client findByActiveAndClientId(Boolean active, Integer id);
 }

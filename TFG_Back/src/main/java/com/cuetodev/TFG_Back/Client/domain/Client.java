@@ -1,10 +1,12 @@
 package com.cuetodev.TFG_Back.Client.domain;
 
+import com.cuetodev.TFG_Back.Pet.domain.Pet;
 import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -12,9 +14,10 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Client {
+    // todo insertar número de teléfono
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer id;
+    private Integer clientId;
 
     @NotNull
     @Size(min = 3, max = 20)
@@ -31,4 +34,7 @@ public class Client {
 
     @NotNull
     private Boolean active;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+    private Set<Pet> pets;
 }
