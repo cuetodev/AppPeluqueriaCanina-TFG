@@ -73,4 +73,12 @@ public class PetUseCase implements PetPort {
         if (pet.getImg() != null) petWantToUpdate.setImg(pet.getImg());
         return petRepositoryPort.createPet(petWantToUpdate);
     }
+
+    @Override
+    public void deletePet(Integer id) {
+        Pet petGoingToDelete = petRepositoryPort.findById(id);
+        if (petGoingToDelete == null || !petGoingToDelete.getClient().getActive()) throw new ErrorOutputDTO("Pet not found");
+
+        petRepositoryPort.deletePet(petGoingToDelete);
+    }
 }

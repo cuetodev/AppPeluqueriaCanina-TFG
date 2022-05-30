@@ -12,4 +12,5 @@ public interface PetPort {
     public Pet createPet(PetInputDTO petReceived);
     public Page<PetOutputDTO> findMyPets(Integer id, int page, int size);
     public Pet updatePet(Integer id, PetUpdateInputDTO pet);
+    public void deletePet(Integer id);
 }

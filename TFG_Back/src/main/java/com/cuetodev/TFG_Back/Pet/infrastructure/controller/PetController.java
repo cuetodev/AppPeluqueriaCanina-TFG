@@ -70,6 +70,11 @@ public class PetController {
      * ------------------ ------ ------------------
      */
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deletePet(@PathVariable Integer id) {
+        petPort.deletePet(id);
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
 
 
 }

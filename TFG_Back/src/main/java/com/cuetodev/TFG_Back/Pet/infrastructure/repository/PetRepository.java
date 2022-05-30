@@ -23,4 +23,9 @@ public class PetRepository implements PetRepositoryPort {
     public Pet findById(Integer id) {
         return petRepositoryJPA.findById(id).orElse(null);
     }
+
+    @Override
+    public void deletePet(Pet petGoingToDelete) {
+        petRepositoryJPA.delete(petGoingToDelete);
+    }
 }
