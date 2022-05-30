@@ -51,6 +51,12 @@ public class PetController {
         return new ResponseEntity<>(checkedPets, HttpStatus.OK);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<?> findByID(@PathVariable Integer id) {
+        Pet pet = petPort.findById(id);
+        return new ResponseEntity<>(new PetOutputDTO(pet), HttpStatus.OK);
+    }
+
     /*
      * ------------------ ------ ------------------
      *                    UPDATE

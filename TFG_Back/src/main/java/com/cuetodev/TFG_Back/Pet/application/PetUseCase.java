@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -80,5 +79,12 @@ public class PetUseCase implements PetPort {
         if (petGoingToDelete == null || !petGoingToDelete.getClient().getActive()) throw new ErrorOutputDTO("Pet not found");
 
         petRepositoryPort.deletePet(petGoingToDelete);
+    }
+
+    @Override
+    public Pet findById(Integer id) {
+        Pet pet = petRepositoryPort.findById(id);
+        if (pet == null) throw new ErrorOutputDTO("Pet not found");
+        return pet;
     }
 }

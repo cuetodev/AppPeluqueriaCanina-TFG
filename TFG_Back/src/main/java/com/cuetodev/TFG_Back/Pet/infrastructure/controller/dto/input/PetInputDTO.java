@@ -35,7 +35,6 @@ public class PetInputDTO {
     private Integer client_id;
 
     public Pet convertDTOEntiy() {
-        // Ill add the client later
         return new Pet(this.id, this.name, this.breed, this.type, this.weight, this.img, null, new HashSet<>());
     }
 }

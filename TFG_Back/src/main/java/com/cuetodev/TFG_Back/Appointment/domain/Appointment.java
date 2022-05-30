@@ -37,6 +37,9 @@ public class Appointment{
     @NotNull
     private String phone;
 
+    @NotNull
+    private String status;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pet_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

@@ -1,7 +1,5 @@
 package com.cuetodev.TFG_Back.Pet.application.port;
 
-import com.cuetodev.TFG_Back.Client.domain.Client;
-import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientUpdateInputDTO;
 import com.cuetodev.TFG_Back.Pet.domain.Pet;
 import com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.input.PetInputDTO;
 import com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.input.PetUpdateInputDTO;
@@ -13,4 +11,5 @@ public interface PetPort {
     public Page<PetOutputDTO> findMyPets(Integer id, int page, int size);
     public Pet updatePet(Integer id, PetUpdateInputDTO pet);
     public void deletePet(Integer id);
+    public Pet findById(Integer id);
 }

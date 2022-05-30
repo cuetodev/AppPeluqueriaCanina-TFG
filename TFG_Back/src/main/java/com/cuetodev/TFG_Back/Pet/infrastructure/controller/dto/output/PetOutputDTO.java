@@ -41,7 +41,7 @@ public class PetOutputDTO {
         this.type = pet.getType();
         this.weight = pet.getWeight();
         this.img = pet.getImg();
-        this.clientId = pet.getClient().getClientId();
+        this.clientId = pet.getClient() == null ? null : pet.getClient().getClientId();
     }
 
 }
