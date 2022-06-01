@@ -42,8 +42,10 @@ git clone https://github.com/cuetodev/AppPeluqueriaCanina-TFG.git
  ```
  docker compose up -d
  ```
+ 
+ `A veces puede pasar que el contenedor "backappdoggroomer" no llegue a iniciarse porque la base de datos tarda un poco en iniciarse y no le da tiempo a conectarse, si esto llegase a ocurrir, simplemente hay que volver a iniciar el contenedor "backappdoggroomer"`
 
-3. Importar en Postman el archivo `X` (Recomendado)
+3. Importar en Postman el archivo `TFG BACK.postman_collection` (Recomendado)
 
 <!-- USAGE EXAMPLES -->
 ## Uso
