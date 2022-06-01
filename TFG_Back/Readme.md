@@ -5,7 +5,7 @@
 
 Este proyecto fue realizado como la parte back de mi TFG, en el instituto IES Fernando III -  Martos (2020-2022)
 
-El proyecto se basa en hacer el back de una agencia de autobuses donde se podrán hacer reservas, consultar reservas, autobuses, emails enviados, se podrán reenviar emails, todo esto bajo la seguridad de un token con JWT, además, la aplicación dispone de varios servicios como Kafka para la comunicación entre el Backempresa y los Backwebs, además del uso de eureka y de un gateway como balanceador de carga.
+El proyecto se basa en hacer el back de una peluquería canina donde se podrán registrar y logear clientes, se podrán crear, borrar, actualizar y ver mascotas, citas, como varios métodos de búsquedad, además, está implementado el jjwt de tal forma que para acceder a algunos endpoints se necesita de un token, he empleado excepciones propias y también he creado etiquetas para validar datos de entrada, entre otras cosas.
 
 ### Tecnologías
 
