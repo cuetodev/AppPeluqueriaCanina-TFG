@@ -43,7 +43,7 @@ git clone https://github.com/cuetodev/AppPeluqueriaCanina-TFG.git
  docker compose up -d
  ```
 
-3. Importar en Postman el archivo `X` (Recomendado)
+3. Importar en Postman el archivo `TFG BACK.postman_collection` (Recomendado)
 
 <!-- USAGE EXAMPLES -->
 ## Uso
