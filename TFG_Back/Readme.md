@@ -5,7 +5,7 @@
 
 Este proyecto fue realizado como la parte back de mi TFG, en el instituto IES Fernando III -  Martos (2020-2022)
 
-El proyecto se basa en hacer el back de una agencia de autobuses donde se podrán hacer reservas, consultar reservas, autobuses, emails enviados, se podrán reenviar emails, todo esto bajo la seguridad de un token con JWT, además, la aplicación dispone de varios servicios como Kafka para la comunicación entre el Backempresa y los Backwebs, además del uso de eureka y de un gateway como balanceador de carga.
+El proyecto se basa en hacer el back de una peluquería canina donde se podrán registrar y logear clientes, se podrán crear, borrar, actualizar y ver mascotas, citas, como varios métodos de búsquedad, además, está implementado el jjwt de tal forma que para acceder a algunos endpoints se necesita de un token, he empleado excepciones propias y también he creado etiquetas para validar datos de entrada, entre otras cosas.
 
 ### Tecnologías
 
@@ -14,8 +14,9 @@ El proyecto se basa en hacer el back de una agencia de autobuses donde se podrá
 
 Librerías usadas de interés
 
-* Lombok     - https://projectlombok.org/
-* JJWT       - https://jwt.io/
+* Lombok                       - https://projectlombok.org/
+* JJWT (Json Web Token)        - https://jwt.io/
+* Spring Boot Starter Security - https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
 
 <!-- GETTING STARTED -->
 ## Empezando
@@ -32,16 +33,17 @@ Importante tener instalado / actualizado lo siguiente:
 1. Primero hacemos un clone del repositorio
 
 ```
-git clone https://github.com/cuetodev/VirtualTravel.git
+git clone https://github.com/cuetodev/AppPeluqueriaCanina-TFG.git
 ```
 
-2. Después inicializamos el docker compose yéndonos a la ruta del proyecto desde un CMD:
+2. Después inicializamos el docker compose yéndonos a la ruta del proyecto (DEL BACK) desde un CMD:
 
+`Antes entrar a la carpeta del back y después realizar el siguiente comando:`
  ```
  docker compose up -d
  ```
 
-3. Importar en Postman el archivo `EFinal_Cloud.postman_collection.json` (Recomendado)
+3. Importar en Postman el archivo `X` (Recomendado)
 
 <!-- USAGE EXAMPLES -->
 ## Uso
@@ -54,10 +56,12 @@ En el título de cada endpoint aparecerán unos símbolos según los roles que t
 |WORK|Todos los trabajadores pueden acceder al endpoint|
 |ADMIN|Solo los administradores pueden acceder al endpoint|
 
-Varios endpoints necesitarán de un token de seguridad, este token lo conseguiremos al loguearnos.
+Varios endpoints necesitarán de un token de seguridad (Explicado más abajo).
 Estos endpoints vendrán marcados con: `Authorization: Bearer Token`
 
 ---
+
+### Cliente
 
 #### Register - ALL
 
@@ -82,10 +86,28 @@ Estos endpoints vendrán marcados con: `Authorization: Bearer Token`
 |-|-|-|
 |`POST`|`api/v0/client/login`|Inicia sesión|
 
-|Parámetros|Valor|Descripción|Comentarios|
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
 |-|-|-|-|
 |`email`|`test@test.com`|Correo para iniciar sesión|Parámetro obligatorio|
 |`password`|`test`|Contraseña para iniciar sesión|Parámetro obligatorio|
+
+---
+
+#### Token - ALL
+
+|Método|URL|Descripción|
+|-|-|-|
+|`GET`|`api/v0/client/token`|Obtiene el token necesario para los demás endpoints|
+
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
+|-|-|-|-|
+|`email`|`test@test.com`|Correo para comprobar|Parámetro obligatorio|
+|`password`|`test`|Contraseña para comprobar|Parámetro obligatorio|
+
+##### Ejemplo de un token recibido
+```
+Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiYUBhLmVzIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY1NDEwNTkyMywiZXhwIjoxNjU0MTA3NzIzfQ.wqlOGs9vUifXwfsVlWgW13Mwie2J6_QpmoFvSR8jXP-VZeoJBOqY9oEwZdIL5qM_ocNflL9C-Xg_3yn1DK_t9w
+```
 
 ---
 
@@ -97,12 +119,11 @@ Estos endpoints vendrán marcados con: `Authorization: Bearer Token`
 |-|-|-|
 |`GET`|`api/v0/client/{id}`|Buscar un cliente según su ID|
 
-|Parámetros|Valor|Descripción|Comentarios|
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
 |-|-|-|-|
 |`id`|`458`|Busca el cliente según su ID|Parámetro obligatorio|
 
 ---
-
 
 #### Buscar cliente por email - WORK
 
@@ -129,11 +150,11 @@ Estos endpoints vendrán marcados con: `Authorization: Bearer Token`
 |-|-|-|
 |`GET`|`api/v0/client/userName`|Buscar un cliente según su nombre de usuario|
 
-|Parámetros|Valor|Descripción|Comentarios|
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
 |-|-|-|-|
 |`userName`|`David`|Nombre de usuario a buscar|Parámetro obligatorio|
 |`page`|`0`|Página que queremos ver|Parámetro opcional, por defecto es 0|
-|`size`|`5`|Número de clientes que queremos que aparezcan por página|Parámetro opcional, por defecto es 10|
+|`size`|`10`|Número de clientes que queremos que aparezcan por página|Parámetro opcional, por defecto es 10|
 
 ---
 
@@ -145,10 +166,10 @@ Estos endpoints vendrán marcados con: `Authorization: Bearer Token`
 |-|-|-|
 |`GET`|`api/v0/client/all`|Listar todos los clientes de la aplicación|
 
-|Parámetros|Valor|Descripción|Comentarios|
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
 |-|-|-|-|
 |`page`|`0`|Página que queremos ver|Parámetro opcional, por defecto es 0|
-|`size`|`5`|Número de clientes que queremos que aparezcan por página|Parámetro opcional, por defecto es 10|
+|`size`|`10`|Número de clientes que queremos que aparezcan por página|Parámetro opcional, por defecto es 10|
 
 ---
 
@@ -183,6 +204,197 @@ Estos endpoints vendrán marcados con: `Authorization: Bearer Token`
 |Método|URL|Descripción|
 |-|-|-|
 |`DELETE`|`api/v0/client/{id}`|Borrar un cliente según su ID|
+
+---
+
+### Mascota
+
+#### Registrar una mascota - ALL
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`POST`|`api/v0/pet`|Registra una mascota|
+
+##### Ejemplo de un body enviado
+```
+{
+    "name": "Zeus",
+    "breed": "Labrador",
+    "type": "Perro",
+    // Parámetros opcionales
+    "weight": 45,
+    "img": "url_imagen...",
+    "client_id": 1 // Este parámetro es opcional porque podré crear una mascota estando logeado y sin logear
+}
+```
+
+---
+
+#### Listar mis mascotas - ALL
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`GET`|`api/v0/pet/{id}/all`|Listar todas mis mascotas|
+
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
+|-|-|-|-|
+|`page`|`0`|Página que queremos ver|Parámetro opcional, por defecto es 0|
+|`size`|`10`|Número de clientes que queremos que aparezcan por página|Parámetro opcional, por defecto es 10|
+
+---
+
+#### Buscar mascota por ID - WORK
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`GET`|`api/v0/pet/{id}`|Buscar una mascota según su ID|
+
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
+|-|-|-|-|
+|`id`|`458`|Busca una mascota según su ID|Parámetro obligatorio|
+
+---
+
+#### Actualizar una mascota - ALL
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`PUT`|`api/v0/pet/{id}`|Actualizar una mascota según su ID|
+
+##### Ejemplo de un body enviado
+```
+{
+    // Parámetros opcionales
+    "name": "Berta",
+    "breed": "Caniche",
+    "type": "Perro",
+    "weight": 15,
+    "img": "img_url"
+}
+```
+
+---
+
+#### Borrar una mascota - ALL
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`DELETE`|`api/v0/pet/{id}`|Borrar una mascota según su ID|
+
+---
+
+### Citas
+
+#### Registrar una cita - ALL
+
+`No necesita token, ya que podemos crear una cita sin estar logeados`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`POST`|`api/v0/appointment`|Registra una cita|
+
+##### Ejemplo de un body enviado
+```
+{
+    "date": "2022-06-01", // Tiene que seguir el formato yyyy-MM-dd
+    "hourCheck": "19:00",
+    "services": "Lavado y peinado",
+    "phone": "123456789",
+    "petId": 1,
+    // Parámetro opcional, por defecto: "active"
+    "status": "finished"
+}
+```
+
+---
+
+#### Listar citas según condiciones - WORK
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`GET`|`api/v0/appointment/all`|Listar citas según condiciones|
+
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
+|-|-|-|-|
+|`page`|`0`|Página que queremos ver|Parámetro opcional, por defecto es 0|
+|`size`|`10`|Número de clientes que queremos que aparezcan por página|Parámetro opcional, por defecto es 10|
+|`status`|`finished`|Status de la cita|Parámetro opcional, por defecto es active|
+|`lowerDate`|`2022-05-10`|Filtrará por citas posteriores a la fecha dada|Parámetro opcional|
+|`upperDate`|`2022-10-27`|Filtrará por citas anteriores a la fecha dada|Parámetro opcional|
+|`equalDate`|`2022-07-15`|Filtrará por citas con la misma fecha dada|Parámetro opcional|
+
+---
+
+#### Listar citas según la ID de un cliente - ALL
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`GET`|`api/v0/appointment/{id}`|Listar mis citas|
+
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
+|-|-|-|-|
+|`id`|`458`|Busca todas las citas según la ID de un cliente|Parámetro obligatorio|
+
+---
+
+#### Buscar cita por ID - WORK
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`GET`|`api/v0/appointment/{id}`|Buscar una cita según su ID|
+
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
+|-|-|-|-|
+|`id`|`458`|Busca una cita según su ID|Parámetro obligatorio|
+
+---
+
+#### Actualizar una cita - ALL
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`PUT`|`api/v0/appointment/{id}`|Actualizar una cita según su ID|
+
+##### Ejemplo de un body enviado
+```
+{
+    // Parámetros opcionales
+    "date": "2022-06-15",
+    "hourCheck": "20:00",
+    "services": "Lavado y corte",
+    "phone": "123456789",
+    "petId": 1,
+    "status": "finished"
+}
+```
+
+---
+
+#### Borrar una cita - ALL
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`DELETE`|`api/v0/appointment/{id}`|Borrar una cita según su ID|
 
 ---
 
