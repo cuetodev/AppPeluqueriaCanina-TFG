@@ -337,6 +337,20 @@ Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiYUBhLmVzIiwiYXV0
 
 ---
 
+#### Listar citas según la ID de un cliente - ALL
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`GET`|`api/v0/appointment/{id}`|Listar mis citas|
+
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
+|-|-|-|-|
+|`id`|`458`|Busca todas las citas según la ID de un cliente|Parámetro obligatorio|
+
+---
+
 #### Buscar cita por ID - WORK
 
 `Authorization: Bearer Token`
