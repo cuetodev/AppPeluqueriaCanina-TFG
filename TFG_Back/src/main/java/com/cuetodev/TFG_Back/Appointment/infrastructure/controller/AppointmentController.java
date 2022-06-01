@@ -17,9 +17,7 @@ import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/v0/appointment")
@@ -65,6 +63,12 @@ public class AppointmentController {
         return new ResponseEntity<>(checkedAppointments, HttpStatus.OK);
     }
 
+    @GetMapping("/client/{id}")
+    public ResponseEntity<?> findMyAppointments(@PathVariable Integer id) {
+        Set<AppointmentOutputDTO> appointmentOutputDTOS = appointmentPort.findMyAppointments(id);
+        return new ResponseEntity<>(appointmentOutputDTOS, HttpStatus.OK);
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<?> findByID(@PathVariable Integer id) {
         Appointment appointment = appointmentPort.findByID(id);
@@ -79,7 +83,7 @@ public class AppointmentController {
 
     @PutMapping("{id}")
     public ResponseEntity<?> updateAppointment(@PathVariable Integer id,
-                                               @RequestBody AppointmentUpdateInputDTO appointmentUpdateInputDTO) throws ParseException {
+                                               @RequestBody @Valid AppointmentUpdateInputDTO appointmentUpdateInputDTO) throws ParseException {
         Appointment updatedAppointment = appointmentPort.updateAppointment(id, appointmentUpdateInputDTO);
         return new ResponseEntity<>(new AppointmentOutputDTO(updatedAppointment), HttpStatus.OK);
     }

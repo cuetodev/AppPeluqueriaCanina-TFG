@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public interface AppointmentPort {
     public Appointment createAppointment(AppointmentInputDTO appointmentReceived) throws ParseException;
@@ -15,4 +17,5 @@ public interface AppointmentPort {
     public Appointment findByID(Integer id);
     public Appointment updateAppointment(Integer id, AppointmentUpdateInputDTO appointmentUpdateInputDTO) throws ParseException;
     public void deleteAppointment(Integer id);
+    public Set<AppointmentOutputDTO> findMyAppointments(Integer clientID);
 }

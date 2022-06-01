@@ -12,7 +12,8 @@ public class DatePatternCheck implements
 
     @Override
     public boolean isValid(String date, ConstraintValidatorContext constraintValidatorContext) {
-        return date != null && date.matches("\\d{4}-\\d{2}-\\d{2}");
+        if (date == null) return true;
+        return date.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
 }

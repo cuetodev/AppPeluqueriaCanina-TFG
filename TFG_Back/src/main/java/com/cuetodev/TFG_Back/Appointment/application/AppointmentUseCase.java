@@ -6,6 +6,8 @@ import com.cuetodev.TFG_Back.Appointment.infrastructure.controller.dto.input.App
 import com.cuetodev.TFG_Back.Appointment.infrastructure.controller.dto.input.AppointmentUpdateInputDTO;
 import com.cuetodev.TFG_Back.Appointment.infrastructure.controller.dto.output.AppointmentOutputDTO;
 import com.cuetodev.TFG_Back.Appointment.infrastructure.repository.AppointmentRepository;
+import com.cuetodev.TFG_Back.Client.application.port.ClientPort;
+import com.cuetodev.TFG_Back.Client.domain.Client;
 import com.cuetodev.TFG_Back.Pet.application.port.PetPort;
 import com.cuetodev.TFG_Back.Pet.domain.Pet;
 import com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.output.PetOutputDTO;
@@ -29,6 +31,9 @@ public class AppointmentUseCase implements AppointmentPort {
     AppointmentRepository appointmentRepository;
 
     @Autowired
+    ClientPort clientPort;
+
+    @Autowired
     PetPort petPort;
 
     @Override
@@ -37,12 +42,29 @@ public class AppointmentUseCase implements AppointmentPort {
         if (pet.getClient() != null) {
             if (pet == null || !pet.getClient().getActive()) throw new ErrorOutputDTO("Pet not found");
         }
+
+        // Getting datetime from today minus 1 day to compare
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, -1);
+        Date todayMinus1Day = c.getTime();
+        String todaMinus1DayString = formatDate(todayMinus1Day);
+
+        HashMap<String, Object> conditions = new HashMap<>();
+        conditions.put("lowerDate", todaMinus1DayString);
+
         // Validating duplicated appointments
-        Set<Appointment> appointments = pet.getAppointments();
+        Set<Appointment> petAppointments = pet.getAppointments();
+        if (!petAppointments.isEmpty()) {
+            petAppointments.forEach(appointment -> {
+                if (appointment.getStatus().equalsIgnoreCase("active")) throw new ErrorOutputDTO("You already have an appointment with this pet");
+            });
+        }
+
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByConditions(conditions);
         appointments.forEach(appointment -> {
             String formatDate = formatDate(appointment.getDate());
             if (appointment.getHourCheck().equalsIgnoreCase(appointmentReceived.getHourCheck()) &&
-                    formatDate.equalsIgnoreCase(appointmentReceived.getDate())) throw new ErrorOutputDTO("You already have this appointment");
+                    formatDate.equalsIgnoreCase(appointmentReceived.getDate())) throw new ErrorOutputDTO("This date and hour is already occupied");
         });
 
         Appointment appointment = appointmentReceived.convertDTOEntity();
@@ -73,22 +95,66 @@ public class AppointmentUseCase implements AppointmentPort {
 
     @Override
     public Appointment updateAppointment(Integer id, AppointmentUpdateInputDTO appointmentUpdateInputDTO) throws ParseException {
-        Appointment appointment = findByID(id);
+        Appointment appointmentReceived = findByID(id);
+        Pet pet = appointmentReceived.getPet();
 
-        if (appointmentUpdateInputDTO.getDate() != null) appointment.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(appointmentUpdateInputDTO.getDate()));
-        if (appointmentUpdateInputDTO.getPhone() != null) appointment.setPhone(appointmentUpdateInputDTO.getPhone());
-        if (appointmentUpdateInputDTO.getHourCheck() != null) appointment.setHourCheck(appointmentUpdateInputDTO.getHourCheck());
-        if (appointmentUpdateInputDTO.getServices() != null) appointment.setServices(appointmentUpdateInputDTO.getServices());
-        if (appointmentUpdateInputDTO.getStatus() != null) appointment.setStatus(appointmentUpdateInputDTO.getStatus());
-        if (appointmentUpdateInputDTO.getPetId() != null) appointment.setPet(petPort.findById(appointmentUpdateInputDTO.getPetId()));
+        // Getting datetime from today minus 1 day to compare
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, -1);
+        Date todayMinus1Day = c.getTime();
+        String todaMinus1DayString = formatDate(todayMinus1Day);
 
-        return appointmentRepository.createAppointment(appointment);
+        HashMap<String, Object> conditions = new HashMap<>();
+        conditions.put("lowerDate", todaMinus1DayString);
+
+        if (appointmentUpdateInputDTO.getDate() != null || appointmentUpdateInputDTO.getHourCheck() != null) {
+            List<Appointment> appointments = appointmentRepository.findAppointmentsByConditions(conditions);
+            appointments.forEach(appointment -> {
+                // Updating Date AND Hour
+                if (appointmentUpdateInputDTO.getDate() != null && appointmentUpdateInputDTO.getHourCheck() != null) {
+                    String formatDate = formatDate(appointment.getDate());
+                    if (appointmentUpdateInputDTO.getHourCheck().equalsIgnoreCase(appointment.getHourCheck()) &&
+                            formatDate.equalsIgnoreCase(appointmentUpdateInputDTO.getDate())) throw new ErrorOutputDTO("This date and hour is already occupied");
+                } else if (appointmentUpdateInputDTO.getDate() != null) { // Updating only Date
+                    String formatDate = formatDate(appointment.getDate());
+                    if (appointment.getHourCheck().equalsIgnoreCase(appointmentReceived.getHourCheck()) &&
+                            formatDate.equalsIgnoreCase(appointmentUpdateInputDTO.getDate())) throw new ErrorOutputDTO("This date and hour is already occupied");
+                } else { // Updating only hour
+                    String formatDate = formatDate(appointment.getDate());
+                    if (appointment.getHourCheck().equalsIgnoreCase(appointmentUpdateInputDTO.getHourCheck()) &&
+                            formatDate.equalsIgnoreCase(formatDate(appointmentReceived.getDate()))) throw new ErrorOutputDTO("This date and hour is already occupied");
+                }
+            });
+        }
+
+        if (appointmentUpdateInputDTO.getDate() != null) appointmentReceived.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(appointmentUpdateInputDTO.getDate()));
+        if (appointmentUpdateInputDTO.getPhone() != null) appointmentReceived.setPhone(appointmentUpdateInputDTO.getPhone());
+        if (appointmentUpdateInputDTO.getHourCheck() != null) appointmentReceived.setHourCheck(appointmentUpdateInputDTO.getHourCheck());
+        if (appointmentUpdateInputDTO.getServices() != null) appointmentReceived.setServices(appointmentUpdateInputDTO.getServices());
+        if (appointmentUpdateInputDTO.getStatus() != null) appointmentReceived.setStatus(appointmentUpdateInputDTO.getStatus());
+        if (appointmentUpdateInputDTO.getPetId() != null) appointmentReceived.setPet(petPort.findById(appointmentUpdateInputDTO.getPetId()));
+
+        return appointmentRepository.createAppointment(appointmentReceived);
     }
 
     @Override
     public void deleteAppointment(Integer id) {
         Appointment appointment = findByID(id);
         appointmentRepository.deleteAppointment(appointment);
+    }
+
+    @Override
+    public Set<AppointmentOutputDTO> findMyAppointments(Integer clientID) {
+        Client client = clientPort.findClientById(clientID);
+        Set<Pet> pets = client.getPets();
+        Set<AppointmentOutputDTO> appointmentOutputDTOS = new HashSet<>();
+        pets.forEach(pet -> {
+            pet.getAppointments().forEach(appointment -> {
+                appointmentOutputDTOS.add(new AppointmentOutputDTO(appointment));
+            });
+        });
+
+        return appointmentOutputDTOS;
     }
 
     private String formatDate(Date date) {

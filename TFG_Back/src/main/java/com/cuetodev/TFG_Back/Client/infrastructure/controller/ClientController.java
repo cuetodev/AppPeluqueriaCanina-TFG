@@ -2,18 +2,26 @@ package com.cuetodev.TFG_Back.Client.infrastructure.controller;
 
 import com.cuetodev.TFG_Back.Client.application.port.ClientPort;
 import com.cuetodev.TFG_Back.Client.domain.Client;
+import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientAuthInputDTO;
 import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientEmailInputDTO;
 import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientInputDTO;
 import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientUpdateInputDTO;
 import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.output.ClientOutputDTO;
 import com.cuetodev.TFG_Back.shared.ErrorHandling.ErrorOutputDTO;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v0/client")
@@ -32,8 +40,7 @@ public class ClientController {
     public ResponseEntity<?> registerClient(@RequestBody @Valid ClientInputDTO clientInputDTO) {
         // First I transform my DTO into my model
         Client client = clientInputDTO.convertEntityToDTO();
-        Client checkedClient;
-        checkedClient = clientPort.checkAndSave(client);
+        Client checkedClient = clientPort.checkAndSave(client);
         return new ResponseEntity<>(new ClientOutputDTO(checkedClient), HttpStatus.OK);
     }
 
@@ -104,6 +111,47 @@ public class ClientController {
     public ResponseEntity<?> deleteClient(@PathVariable Integer id) {
         clientPort.deleteClient(id);
         return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+    /*
+     * ------------------ --- ------------------
+     *                    JWT
+     * ------------------ --- ------------------
+     */
+
+    @GetMapping("/token")
+    public ResponseEntity<?> getToken(@RequestBody @Valid ClientAuthInputDTO clientAuthInputDTO) {
+        String email = clientAuthInputDTO.getEmail();
+        String password = clientAuthInputDTO.getPassword();
+
+        Client clientWantedToFind = clientPort.findClientByEmailAndPassword(email, password);
+
+        if (clientWantedToFind == null) return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
+        if (!clientWantedToFind.getEmail().trim().equals(email) || !clientWantedToFind.getPassword().equals(password))
+            return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
+
+        String rol = clientWantedToFind.getRole().toUpperCase().trim();
+        return new ResponseEntity<>(getJWTToken(email, rol), HttpStatus.OK);
+    }
+
+    private String getJWTToken(String email, String rol) {
+        String secretKey = "mySecretKey";
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+                .commaSeparatedStringToAuthorityList("ROLE_USER");
+
+        String token = Jwts
+                .builder()
+                .setId("softtekJWT")
+                .setSubject(email)
+                .claim("authorities",
+                        grantedAuthorities.stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .signWith(SignatureAlgorithm.HS512,
+                        secretKey.getBytes()).compact();
+
+        return "Bearer " + token;
     }
 
 }
