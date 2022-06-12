@@ -48,7 +48,8 @@ git clone https://github.com/cuetodev/AppPeluqueriaCanina-TFG.git
 
 ### Manual de uso y explicación de cada pantalla
 
-
+Acceder al siguiente enlace en el que está redactado el manual de uso de la aplicación donde se explica cada pantalla
+https://github.com/cuetodev/AppPeluqueriaCanina-TFG/blob/main/Manuales_TFG_DavidCuetoGarrido.pdf
 
 ---
 
