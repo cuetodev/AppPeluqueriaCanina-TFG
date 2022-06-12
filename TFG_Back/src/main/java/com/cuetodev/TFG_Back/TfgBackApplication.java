@@ -2,7 +2,6 @@ package com.cuetodev.TFG_Back;
 
 import com.cuetodev.TFG_Back.Client.application.port.ClientPort;
 import com.cuetodev.TFG_Back.Client.domain.Client;
-import com.cuetodev.TFG_Back.Pet.domain.Pet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.HashSet;
-import java.util.Set;
 
 @SpringBootApplication
 public class TfgBackApplication {

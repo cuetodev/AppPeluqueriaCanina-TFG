@@ -18,4 +18,5 @@ public interface AppointmentPort {
     public Appointment updateAppointment(Integer id, AppointmentUpdateInputDTO appointmentUpdateInputDTO) throws ParseException;
     public void deleteAppointment(Integer id);
     public Set<AppointmentOutputDTO> findMyAppointments(Integer clientID);
+    public List<String> getTimesByDate(String date);
 }

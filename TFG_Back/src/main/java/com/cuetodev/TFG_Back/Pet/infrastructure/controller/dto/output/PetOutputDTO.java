@@ -1,6 +1,5 @@
 package com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.output;
 
-import com.cuetodev.TFG_Back.Client.domain.Client;
 import com.cuetodev.TFG_Back.Pet.domain.Pet;
 import lombok.AllArgsConstructor;
 import lombok.Data;

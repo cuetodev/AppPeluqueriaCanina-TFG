@@ -1,15 +1,11 @@
 package com.cuetodev.TFG_Back.Pet.infrastructure.controller;
 
 
-import com.cuetodev.TFG_Back.Client.domain.Client;
-import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientUpdateInputDTO;
-import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.output.ClientOutputDTO;
 import com.cuetodev.TFG_Back.Pet.application.port.PetPort;
 import com.cuetodev.TFG_Back.Pet.domain.Pet;
 import com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.input.PetInputDTO;
 import com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.input.PetUpdateInputDTO;
 import com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.output.PetOutputDTO;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -31,11 +27,12 @@ public class PetController {
     * ------------------ ------ ------------------
     */
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<?> createPet(@RequestBody @Valid PetInputDTO petInputDTO) {
         Pet finalPet = petPort.createPet(petInputDTO);
         return new ResponseEntity<>(new PetOutputDTO(finalPet), HttpStatus.OK);
     }
+
 
     /*
      * ------------------ ---- ------------------

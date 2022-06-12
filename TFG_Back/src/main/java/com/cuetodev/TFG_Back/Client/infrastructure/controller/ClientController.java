@@ -2,7 +2,6 @@ package com.cuetodev.TFG_Back.Client.infrastructure.controller;
 
 import com.cuetodev.TFG_Back.Client.application.port.ClientPort;
 import com.cuetodev.TFG_Back.Client.domain.Client;
-import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientAuthInputDTO;
 import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientEmailInputDTO;
 import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientInputDTO;
 import com.cuetodev.TFG_Back.Client.infrastructure.controller.dto.input.ClientUpdateInputDTO;
@@ -64,7 +63,7 @@ public class ClientController {
         return new ResponseEntity<>(new ClientOutputDTO(checkedClient), HttpStatus.OK);
     }
 
-    @GetMapping("/email")
+    @PostMapping("/email")
     public ResponseEntity<?> findClientByEmail(@RequestBody @Valid ClientEmailInputDTO clientEmailInputDTO) {
         String email = clientEmailInputDTO.getEmail();
         if (email == null) throw new ErrorOutputDTO("Email cannot be null");
@@ -120,10 +119,8 @@ public class ClientController {
      */
 
     @GetMapping("/token")
-    public ResponseEntity<?> getToken(@RequestBody @Valid ClientAuthInputDTO clientAuthInputDTO) {
-        String email = clientAuthInputDTO.getEmail();
-        String password = clientAuthInputDTO.getPassword();
-
+    public ResponseEntity<?> getToken(@RequestParam String email,
+                                      @RequestParam String password) {
         Client clientWantedToFind = clientPort.findClientByEmailAndPassword(email, password);
 
         if (clientWantedToFind == null) return new ResponseEntity<>("", HttpStatus.FORBIDDEN);

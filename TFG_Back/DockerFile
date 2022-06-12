@@ -1,4 +1,6 @@
 FROM openjdk:17
 EXPOSE 8080
-COPY /target/*.jar /usr/local/lib/spring.jar
-ENTRYPOINT ["java","-jar","/usr/local/lib/spring.jar"]
+WORKDIR /usr/local/bin/myApp
+ADD . ./src/main/resources/static/images
+ADD target/TFG_Back-0.0.1-SNAPSHOT.jar .
+ENTRYPOINT ["java","-jar","TFG_Back-0.0.1-SNAPSHOT.jar"]

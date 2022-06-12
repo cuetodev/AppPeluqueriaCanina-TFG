@@ -6,7 +6,6 @@ import com.cuetodev.TFG_Back.Appointment.domain.Appointment;
 import com.cuetodev.TFG_Back.Appointment.infrastructure.controller.dto.input.AppointmentInputDTO;
 import com.cuetodev.TFG_Back.Appointment.infrastructure.controller.dto.input.AppointmentUpdateInputDTO;
 import com.cuetodev.TFG_Back.Appointment.infrastructure.controller.dto.output.AppointmentOutputDTO;
-import com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.output.PetOutputDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v0/appointment")
@@ -73,6 +72,12 @@ public class AppointmentController {
     public ResponseEntity<?> findByID(@PathVariable Integer id) {
         Appointment appointment = appointmentPort.findByID(id);
         return new ResponseEntity<>(new AppointmentOutputDTO(appointment), HttpStatus.OK);
+    }
+
+    @GetMapping("/times")
+    public ResponseEntity<List<String>> getTimesByDate(@RequestParam String date) {
+        List<String> times = appointmentPort.getTimesByDate(date);
+        return new ResponseEntity<>(times, HttpStatus.OK);
     }
 
     /*

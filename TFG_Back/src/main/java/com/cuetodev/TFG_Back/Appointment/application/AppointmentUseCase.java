@@ -10,7 +10,6 @@ import com.cuetodev.TFG_Back.Client.application.port.ClientPort;
 import com.cuetodev.TFG_Back.Client.domain.Client;
 import com.cuetodev.TFG_Back.Pet.application.port.PetPort;
 import com.cuetodev.TFG_Back.Pet.domain.Pet;
-import com.cuetodev.TFG_Back.Pet.infrastructure.controller.dto.output.PetOutputDTO;
 import com.cuetodev.TFG_Back.shared.ErrorHandling.ErrorOutputDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -155,6 +154,26 @@ public class AppointmentUseCase implements AppointmentPort {
         });
 
         return appointmentOutputDTOS;
+    }
+
+    @Override
+    public List<String> getTimesByDate(String date) {
+        List<String> availableTimes = new LinkedList<String>(Arrays.asList("9:00", "10:00", "11:00", "12:00", "13:00", "17:00", "18:00", "19:00", "20:00"));
+        Set<String> timesOccupied = new HashSet<>();
+
+        HashMap<String, Object> conditions = new HashMap<>();
+        conditions.put("equalDate", date);
+
+        List<Appointment> appointmentList = appointmentRepository.findAppointmentsByConditions(conditions);
+        if (!appointmentList.isEmpty()) {
+            appointmentList.forEach(appointment -> {
+                timesOccupied.add(appointment.getHourCheck());
+            });
+
+            availableTimes.removeAll(timesOccupied);
+        }
+
+        return availableTimes;
     }
 
     private String formatDate(Date date) {

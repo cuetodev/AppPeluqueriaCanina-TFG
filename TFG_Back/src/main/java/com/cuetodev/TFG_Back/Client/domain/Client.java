@@ -2,7 +2,10 @@ package com.cuetodev.TFG_Back.Client.domain;
 
 import com.cuetodev.TFG_Back.Pet.domain.Pet;
 import com.sun.istack.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;

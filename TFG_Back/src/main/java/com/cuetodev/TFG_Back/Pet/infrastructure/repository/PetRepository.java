@@ -6,8 +6,6 @@ import com.cuetodev.TFG_Back.Pet.infrastructure.repository.port.PetRepositoryPor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class PetRepository implements PetRepositoryPort {
 

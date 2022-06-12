@@ -8,10 +8,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
 @Configuration
-public class WebSecurityConfig {
+public class WebSecurityConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry
+                .addResourceHandler("/resources/**")
+                .addResourceLocations("/resources/");
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -22,6 +31,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/v0/appointment").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v0/client/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v0/client/token").permitAll()
+                .antMatchers("images/**", "/resources/**","/resources/static/images/**").permitAll()
                 .antMatchers("api/v0/**").hasAnyRole("USER", "WORKER", "ADMIN")
                 .anyRequest().authenticated();
 
