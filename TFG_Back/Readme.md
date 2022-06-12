@@ -1,6 +1,16 @@
 <h1 align = center>App Peluquería Canina</h1>
 
-<!-- ABOUT THE PROJECT -->
+## Definición de algunos conceptos
+
+* Back - La parte de atrás de la aplicación (back del inglés: parte trasera), donde está toda la lógica desarrollada de la aplicación.
+* Front - La parte de alante de la aplicación (front del inglés: parte delantera), donde está la parte visible que toca el usuario.
+* Microservicio - Parte de código desarrollada con una finalidad concreta, por ejemplo, un microservicio que me permita añadir mascotas.
+* Endpoint - Dirección http por la cual se conecta el front con el back para acceder a algún microservicio.
+* JJWT - Sistema de seguridad basado en acceder a los endpoints a través de un token, sin ese token no se podrá acceder.
+* Springboot - Tecnología que me permite crear aplicaciones autocontroladas basada en Java
+* Java - Lenguaje de programación tipado.
+* Lombok - Librería utilizada para la creación de constructores, getter, setter, to string, entre otras cosas para las clases con simplemente agregar etiquetas.
+
 ## Sobre el proyecto
 
 Este proyecto fue realizado como la parte back de mi TFG, en el instituto IES Fernando III -  Martos (2020-2022)
@@ -336,6 +346,22 @@ Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoiYUBhLmVzIiwiYXV0
 |`lowerDate`|`2022-05-10`|Filtrará por citas posteriores a la fecha dada|Parámetro opcional|
 |`upperDate`|`2022-10-27`|Filtrará por citas anteriores a la fecha dada|Parámetro opcional|
 |`equalDate`|`2022-07-15`|Filtrará por citas con la misma fecha dada|Parámetro opcional|
+
+---
+
+#### Listar horas disponibles según una fecha dada - WORK
+
+`Authorization: Bearer Token`
+
+|Método|URL|Descripción|
+|-|-|-|
+|`GET`|`api/v0/appointment/times`|Listar horas disponibles según fecha dada|
+
+|Parámetros|Valor de ejemplo|Descripción|Comentarios|
+|-|-|-|-|
+|`date`|`2022-06-12`|Fecha a la que queremos que nos devuelva los horarios disponibles|Parámetro obligatorio|
+
+Devuelve: `List<String>` con las horas disponibles
 
 ---
 
